@@ -27,6 +27,7 @@ public class CPU {
     private ArrayList<Process> procQueue = new ArrayList<>();
     private ArrayList<Process> readyQueue = new ArrayList<>();
     private static ArrayList<String> randomData = new ArrayList<>();
+    private static ArrayList<String> levels = new ArrayList<>();
     private Process preProc = null;
     
     private Process activeProc = null;
@@ -37,8 +38,10 @@ public class CPU {
     private double Potency = 0.0;
     
     
-    CPU(String data, String schName, boolean isMulti) {
-        setSchMethod(schName);
+    CPU(String data, String schName) {
+        levels.clear();
+        sm = setSchMethod(schName);
+        sm.setScheduler(sm);
         activeProc = null;
         Process proc = null;
         double b = 0, d = 0;
@@ -51,7 +54,30 @@ public class CPU {
             d = Double.parseDouble(split[1]);
             p = (int)Double.parseDouble(split[2]);
             proc = new Process(i, b, d, p);
-            if(isMulti) proc.setLevel((int)Double.parseDouble(split[3]));
+            proc.setLevel((int)Double.parseDouble(split[3]));
+            i++;
+            allProcs.add(proc);
+        }
+        initProcQueue(allProcs);
+    }
+    
+    CPU(String data, ArrayList<String> schName, String isPreemptive) {
+        levels.addAll(schName);
+        sm = setSchMethod(isPreemptive + "Multi Level");
+        sm.setScheduler(sm);
+        activeProc = null;
+        Process proc = null;
+        double b = 0, d = 0;
+        int p = 0;
+        String[] lines = data.split("\n");
+        int i = 1;
+        for (String line : lines) {
+            String[] split = line.split("\\s+");
+            b = Double.parseDouble(split[0]);
+            d = Double.parseDouble(split[1]);
+            p = (int)Double.parseDouble(split[2]);
+            proc = new Process(i, b, d, p);
+            proc.setLevel((int)Double.parseDouble(split[3]));
             i++;
             allProcs.add(proc);
         }
@@ -167,40 +193,31 @@ public class CPU {
     }
     
     
-    public void setSchMethod(String method) {
+    public static Scheduler setSchMethod(String method) {
         
         String split[] = method.split(":");
         
         switch(split[0]){
             case "FCFS":
-                sm = new Sch_FCFS();
-                sm.setScheduler(sm);
-                break;
+                return new Sch_FCFS();
             case "PSJF":
-                sm = new Sch_SJF(true);
-                sm.setScheduler(sm);
-                break;
+                return new Sch_SJF(true);
             case "SJF":
-                sm = new Sch_SJF(false);
-                sm.setScheduler(sm);
-                break;
-            case "Primitive Priority":
-                sm = new Sch_Priority(true);
-                sm.setScheduler(sm);
-                break;
+                return new Sch_SJF(false);
+            case "Preemptive Priority":
+                return new Sch_Priority(true);
             case "Priority":
-                sm = new Sch_Priority(false);
-                sm.setScheduler(sm);
-                break;
+                return new Sch_Priority(false);
             case "Round Robin":
-                sm = new Sch_RR(Double.valueOf(split[1]));
-                sm.setScheduler(sm);
-                break;
+                return new Sch_RR(Double.valueOf(split[1]));
             case "Lottery":
-                sm = new Sch_Lottery();
-                sm.setScheduler(sm);
-                break;
+                return new Sch_Lottery();
+            case "Multi Level":
+                return new Sch_Multilevel(levels, false);
+            case "Preemptive Multi Level":
+                return new Sch_Multilevel(levels, true);
         }
+        return null;
     }
     
     

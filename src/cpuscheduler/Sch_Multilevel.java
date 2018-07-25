@@ -16,16 +16,20 @@ import java.util.Random;
 public class Sch_Multilevel extends Scheduler{
     
     private ArrayList<Scheduler> levels;
-    private static final int priorRefresh = 10;
+    private boolean preemptive;
     
-    public Sch_Multilevel(ArrayList<Scheduler> lvls) {
-        levels = lvls;
+    public Sch_Multilevel(ArrayList<String> lvls, boolean isPreemptive) {
+        levels = new ArrayList<>();
+        for (String lvl : lvls) {
+            levels.add(CPU.setSchMethod(lvl));
+        }
+        this.preemptive = isPreemptive;
         activeProc = null;
     }
     
     @Override
     public void addProc(Process p) {
-        levels.get(p.getLevel()).addProc(p);
+        levels.get(p.getLevel()-1).addProc(p);
     }
     
     @Override
@@ -47,23 +51,13 @@ public class Sch_Multilevel extends Scheduler{
     
     @Override
     public Process getNextProc(double currentTime) {
-        if(activeProc != null){
-            activeProc.setPriority(activeProc.getPriority()+1);
-            if(activeProc.getPriority() == priorRefresh && activeProc.getLevel() > 0){
-                levels.get(activeProc.getLevel()).removeProc(activeProc);
-                activeProc.setLevel(activeProc.getLevel()-1);
-                activeProc.setPriority(0);
-                levels.get(activeProc.getLevel()).addProc(activeProc);
-            }else if(activeProc.getLevel() < levels.size()-1){
-                levels.get(activeProc.getLevel()).removeProc(activeProc);
-                activeProc.setLevel(activeProc.getLevel()+1);
-                levels.get(activeProc.getLevel()).addProc(activeProc);
-            }
-        }
-        if (activeProc == null || activeProc.isIsFinished()) {
+        if(activeProc != null && activeProc.isIsFinished()){
             activeProc = null;
-            for(int i=0; i<levels.size(); i++){
-                if((activeProc = levels.get(i).getNextProc(currentTime)) != null){
+        }
+        if(isPreemptive() || activeProc == null){
+            for (int i = 0; i < levels.size(); i++) {
+                if(levels.get(i).isProcLeft()){
+                    activeProc = levels.get(i).getNextProc(currentTime);
                     break;
                 }
             }
@@ -72,8 +66,15 @@ public class Sch_Multilevel extends Scheduler{
     }
     
     public String getName() {
-        return "Multilevel Priority";
+        return !isPreemptive() ? "Multi Level" : "Preemptive Multi Level";
     }
     
+    public boolean isPreemptive() {
+        return preemptive;
+    }
     
+    @Override
+    public boolean isProcLeft() {
+        return false;
+    }
 }

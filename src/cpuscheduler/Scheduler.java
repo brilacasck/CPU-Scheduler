@@ -16,6 +16,7 @@ public  abstract class Scheduler {
     public abstract boolean removeProc(Process p);
     public abstract void setScheduler(Scheduler method);
     public abstract Process getNextProc(double currentTime);
+    public abstract boolean isProcLeft();
     public abstract String getName();
     public boolean isJobFinished(){
 		if (activeProc != null) return activeProc.isIsFinished();

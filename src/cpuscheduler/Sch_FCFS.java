@@ -54,5 +54,10 @@ public class Sch_FCFS extends Scheduler{
     public String getName() {
         return "FCFS";
     }
+
+    @Override
+    public boolean isProcLeft() {
+        return !pq.isEmpty();
+    }
     
 }

@@ -15,11 +15,11 @@ import java.util.PriorityQueue;
  */
 public class Sch_Priority extends Scheduler{
     
-    private boolean premetive;
+    private boolean preemptive;
     private PriorityQueue<Process> pq;
     
-    public Sch_Priority(boolean isPremetive) {
-        premetive = isPremetive;
+    public Sch_Priority(boolean isPreemptive) {
+        preemptive = isPreemptive;
         pq = new PriorityQueue<>(new Comparator<Process>() {
             @Override
             public int compare(Process o1, Process o2) {
@@ -61,7 +61,12 @@ public class Sch_Priority extends Scheduler{
     }
     
     public boolean isPreemptive() {
-        return premetive;
+        return preemptive;
+    }
+    
+    @Override
+    public boolean isProcLeft() {
+        return !pq.isEmpty();
     }
     
 }

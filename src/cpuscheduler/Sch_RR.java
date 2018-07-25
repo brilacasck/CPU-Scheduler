@@ -95,4 +95,9 @@ public class Sch_RR extends Scheduler{
         return "RR";
     }
     
+    @Override
+    public boolean isProcLeft() {
+        return !pq.isEmpty();
+    }
+    
 }

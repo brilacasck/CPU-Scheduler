@@ -52,4 +52,9 @@ public class Sch_Lottery extends Scheduler {
         return "Lottery";
     }
     
+    @Override
+    public boolean isProcLeft() {
+        return !procList.isEmpty();
+    }
+    
 }

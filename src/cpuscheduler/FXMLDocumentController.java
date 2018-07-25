@@ -99,9 +99,11 @@ public class FXMLDocumentController implements Initializable {
                 status.setTextFill(Color.RED);
             }else{
                 if(levelMethod.getValue().equals("Single Level")){
-                    cpu = new CPU(input.getText(), method, false);
+                    cpu = new CPU(input.getText(), method);
+                }else if(levelMethod.getValue().equals("Preemptive Multi Level")){
+                    cpu = new CPU(input.getText(), schLevels, "Preemptive ");
                 }else{
-                    cpu = new CPU(input.getText(), method, true);
+                    cpu = new CPU(input.getText(), schLevels, "");
                 }
                 prevInput = input.getText();
                 cpu.Simulate();
@@ -229,7 +231,8 @@ public class FXMLDocumentController implements Initializable {
         }
         
         try{
-            if(levelMethod.getValue().equals("Multi Level")){
+            if(levelMethod.getValue().equals("Multi Level")
+                    || levelMethod.getValue().equals("Preemptive Multi Level")){
                 levels.setVisible(true);
                 input.setPrefHeight(258);
                 removeLevel.setVisible(true);
@@ -333,11 +336,11 @@ public class FXMLDocumentController implements Initializable {
         quantum.setDisable(true);
         
         schMethod.getItems().removeAll(schMethod.getItems());
-        schMethod.getItems().addAll("FCFS", "PSJF", "SJF", "Primitive Priority", "Priority", "Round Robin", "Lottery");
+        schMethod.getItems().addAll("FCFS", "PSJF", "SJF", "Preemptive Priority", "Priority", "Round Robin", "Lottery");
         schMethod.getSelectionModel().select("FCFS");
         
         levelMethod.getItems().removeAll(levelMethod.getItems());
-        levelMethod.getItems().addAll("Single Level", "Multi Level");
+        levelMethod.getItems().addAll("Single Level", "Multi Level", "Preemptive Multi Level");
         levelMethod.getSelectionModel().select("Single Level");
         
         input.setPrefHeight(650);
