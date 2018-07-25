@@ -100,7 +100,7 @@ The hierarchy display of the classes is demonstrated here:
 
 ## Results
 
-**Input Tabel:
+Input Tabel:
 
 | Process Name  | Arrival Time  | Execute Time  | Level         |
 | ------------- | ------------- | ------------- | ------------- |
