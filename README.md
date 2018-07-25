@@ -55,7 +55,25 @@ The hierarchy display of the classes is demonstrated here:
 
 <hr />
 
+- Process: either a process is executing or waiting these 2 states are handled in:
+    - executing(double timeNow) : consume burst time and check if process is arrived or finished.
+    - waiting(double timeNow) : add to waiting time
 
+- CPU: 
+    - first all process get initialize and added to allProc and procQueue ArrayList
+    - then in Simulate() cpu checks if any process if it's arrived or not then add it to readyQueue
+    - then depend on the scheduler next ready process will go on cpu
+    - then cpu refresh its procQueue and readyQueue to remove finished processes
+    - at last cpu save the report for simulation gui and reset all scheduler data
+    
+- Scheduler:
+    - depend on the scheduler method return next process to go on cpu
+    - Sch_FCFS: Priority Queue on arrival time
+    - Sch_SJF: Priority Queue on burst time if preemptive is true always check for shorter burst time in queue
+    - Sch_Priority: Priority Queue on priority if preemptive is true always check for shorter burst time in queue
+    - Sch_RR: Priority Queue on arrival time and have additional RR list for switching between arrived processes in quantum time interval
+    - Sch_Lottery: Random List of processes
+    - Sch_Multilevel: List of scheduler levels return next process depend on scheduler method of first non-empty level if preemptive is true always check for non-empty levels first
 
 <hr />
 
