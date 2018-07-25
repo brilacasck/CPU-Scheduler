@@ -55,6 +55,10 @@ The hierarchy display of the classes is demonstrated here:
 
 <hr />
 
+
+
+<hr />
+
 > NOTES
 
 ***Note that simulation time unit is 0.1 so burst time or delay time must be multiple of 0.1***
@@ -78,16 +82,16 @@ The hierarchy display of the classes is demonstrated here:
 
 ## Results
 
-    - For Example we are Scheduling process in Multi Level non-preemptive(l1:FCFS, l2 FCFS) below (input.txt file)
+**For Example we are Scheduling process in Multi Level non-preemptive(l1:FCFS, l2 FCFS) below (input.txt file)**
 <img src="./assets/Multilevel.jpg" width="500" align="middle">
 
-    - First we enter process information and choose scheduling alghorithm then press Run button
-<img src="./assets/3_example.jpg" width="500" align="middle">
+**First we enter process information and choose scheduling alghorithm then press Run button**
+<img src="./assets/3_example.png" width="500" align="middle">
 
-    - Wait for simulation to end
+**Wait for simulation to end**
 <img src="./assets/4_duringex.png" width="500" align="middle">
 
-    - Now you can see the results
+**Now you can see the results**
 <img src="./assets/5_reportex.png" width="500" align="middle">
 
 
