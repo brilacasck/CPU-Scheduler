@@ -82,12 +82,18 @@ The hierarchy display of the classes is demonstrated here:
 
 ## Results
 
-**Input Tabel: **
+**Input Tabel:
 
 | Process Name  | Arrival Time  | Execute Time  | Level         |
 | ------------- | ------------- | ------------- | ------------- |
 | 1             | 0             | 5             | 1             |
 | 2             | 1             | 8             | 2             |
+| 3             | 3             | 7             | 2             |
+| 4             | 4             | 3             | 1             |
+| 5             | 5             | 3             | 1             |
+| 6             | 8             | 11            | 2             |
+| 7             | 15            | 3             | 1             |
+| 8             | 25            | 4             | 1             |
 
 
 **For Example we are Scheduling process in Multi Level non-preemptive(l1:FCFS, l2 FCFS) below (input.txt file)**
