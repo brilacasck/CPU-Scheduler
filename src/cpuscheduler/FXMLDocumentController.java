@@ -5,19 +5,23 @@
 */
 package cpuscheduler;
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.time;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -41,10 +45,22 @@ public class FXMLDocumentController implements Initializable {
     private Button run;
     
     @FXML
+    private Button randomInput;
+    
+    @FXML
     private Button reloadFile;
     
     @FXML
+    private Button addLevel;
+    
+    @FXML
+    private Button removeLevel;
+    
+    @FXML
     private TextArea input;
+    
+    @FXML
+    private TextArea levels;
     
     @FXML
     private ChoiceBox schMethod;
@@ -61,6 +77,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TextField quantum;
     
+    private ArrayList<String> schLevels;
+    
+    private static CPU cpu;
+    
+    private static double speed;
     
     @FXML
     private void handleRunButtonAction(ActionEvent event) {
@@ -68,24 +89,71 @@ public class FXMLDocumentController implements Initializable {
         if(validate() == "OK"){
             status.setText("OK");
             status.setTextFill(Color.DARKGREEN);
-            CPU cpu;
             String method = schMethod.getValue().toString();
             if(schMethod.getValue().equals("Round Robin")) method += ":" + quantum.getText();
             
             if(input.getText().startsWith("Random")){
-                String[] line = input.getText().split("\n");
-                String[] split = line[0].split("\\s+");
-                cpu = new CPU(Integer.valueOf(split[1]), method);
+                status.setText("Error: Randomize First (press Random Input button)");
+                status.setTextFill(Color.RED);
             }else{
-                cpu = new CPU(input.getText(), method);
+                if(levelMethod.getValue().equals("Single Level")){
+                    cpu = new CPU(input.getText(), method, false);
+                }else{
+                    cpu = new CPU(input.getText(), method, true);
+                }
+                cpu.Simulate();
+                speed = Double.parseDouble(simSpeed.getText());
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("Simulation.fxml"));
+                    Scene scene = new Scene(root);
+                    Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            cpu.Simulate();
-            System.out.println(cpu.getReport());
         }else{
             status.setText(validate());
             status.setTextFill(Color.RED);
         }
         
+        
+    }
+    
+    @FXML
+    private void handleRandomInputButtonAction(ActionEvent event) {
+        
+        String method = schMethod.getValue().toString();
+        if(schMethod.getValue().equals("Round Robin")) method += ":" + quantum.getText();
+        
+        if(input.getText().startsWith("Random")){
+            status.setText("OK");
+            status.setTextFill(Color.DARKGREEN);
+            String[] line = input.getText().split("\n");
+            String[] split = line[0].split("\\s+");
+            if(levelMethod.getValue().equals("Single Level")){
+                CPU.randProc(Integer.valueOf(split[1]), false, 1);
+            }else{
+                CPU.randProc(Integer.valueOf(split[1]), true, schLevels.size());
+            }
+            String res = "";
+            for (String string : cpu.getRandomData()) {
+                res += string + "\n";
+            }
+            input.setText(res);
+        }else{
+            if(levelMethod.getValue().equals("Single Level")){
+                CPU.randProc(Integer.valueOf(5), false, 1);
+            }else{
+                CPU.randProc(Integer.valueOf(5), true, schLevels.size());
+            }
+            String res = "";
+            for (String string : cpu.getRandomData()) {
+                res += string + "\n";
+            }
+            input.setText(res);
+        }
         
     }
     
@@ -121,12 +189,60 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @FXML
+    private void handleAddLevelButtonAction(ActionEvent event) {
+        
+        String method = schMethod.getValue().toString();
+        if(schMethod.getValue().equals("Round Robin")) method += ":" + quantum.getText();
+        schLevels.add(method);
+        levels.setText(levels.getText() + "Level " + schLevels.size() + " : " + method + "\n");
+        
+    }
+    
+    @FXML
+    private void handleRemoveLevelButtonAction(ActionEvent event) {
+        
+        if(schLevels.size() > 0){
+            schLevels.remove(schLevels.size()-1);
+            String res = "";
+            int i = 1;
+            for (String schLevel : schLevels) {
+                res += "Level " + i + " : " + schLevel + "\n";
+                i++;
+            }
+            levels.setText(res);
+        }
+        
+    }
+    
+    @FXML
     private void choiceBoxAction(ActionEvent event){
         
         if(schMethod.getValue().equals("Round Robin")){
             quantum.setDisable(false);
         }else{
             quantum.setDisable(true);
+        }
+        
+        try{
+            if(levelMethod.getValue().equals("Multi Level")){
+                levels.setVisible(true);
+                input.setPrefHeight(258);
+                removeLevel.setVisible(true);
+                addLevel.setVisible(true);
+                run.setTranslateY(-5);
+                reloadFile.setTranslateY(-5);
+                randomInput.setTranslateY(-5);
+            }else{
+                levels.setVisible(false);
+                input.setPrefHeight(650);
+                removeLevel.setVisible(false);
+                addLevel.setVisible(false);
+                run.setTranslateY(5);
+                reloadFile.setTranslateY(5);
+                randomInput.setTranslateY(5);
+            }
+        }catch(Exception e){
+            
         }
         
     }
@@ -167,12 +283,17 @@ public class FXMLDocumentController implements Initializable {
                 return "Error: Bad Input for Random";
             }
         }else{
+            int level = 0;
             try{
                 for (String line : lines) {
                     String[] split = line.split("\\s+");
                     Double.parseDouble(split[0]);
                     Double.parseDouble(split[1]);
                     Integer.parseInt(split[2]);
+                    level = Integer.parseInt(split[3]);
+                    if(level-1 > schLevels.size()){
+                        return "Error: Bad Level Input";
+                    }
                 }
             }catch(Exception e){
                 return "Error: Bad Input";
@@ -192,6 +313,8 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+        schLevels = new ArrayList<>();
+        
         simSpeed.addEventFilter(KeyEvent.KEY_TYPED, numericValidation(2));
         cs.addEventFilter(KeyEvent.KEY_TYPED, numericValidation(5));
         quantum.addEventFilter(KeyEvent.KEY_TYPED, numericValidation(5));
@@ -205,7 +328,23 @@ public class FXMLDocumentController implements Initializable {
         levelMethod.getItems().addAll("Single Level", "Multi Level");
         levelMethod.getSelectionModel().select("Single Level");
         
+        input.setPrefHeight(650);
+        levels.setEditable(false);
+        levels.setVisible(false);
+        
+        removeLevel.setVisible(false);
+        addLevel.setVisible(false);
+        run.setTranslateY(20);
+        reloadFile.setTranslateY(20);
+        randomInput.setTranslateY(20);
         
     }
     
+    public static CPU getCpu() {
+        return cpu;
+    }
+    
+    public static double getSpeed(){
+        return speed;
+    }
 }

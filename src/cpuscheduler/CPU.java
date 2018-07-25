@@ -5,13 +5,10 @@
 */
 package cpuscheduler;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -29,6 +26,7 @@ public class CPU {
     private ArrayList<Process> allProcs = new ArrayList<>();
     private ArrayList<Process> procQueue = new ArrayList<>();
     private ArrayList<Process> readyQueue = new ArrayList<>();
+    private static ArrayList<String> randomData = new ArrayList<>();
     private Process preProc = null;
     
     private Process activeProc = null;
@@ -39,15 +37,8 @@ public class CPU {
     private double Potency = 0.0;
     
     
-    CPU(int processNum, String schName) {
+    CPU(String data, String schName, boolean isMulti) {
         setSchMethod(schName);
-        System.out.println(sm.getName());
-        initAllProc(processNum);
-    }
-    
-    CPU(String data, String schName) {
-        setSchMethod(schName);
-        System.out.println(sm.getName());
         activeProc = null;
         Process proc = null;
         double b = 0, d = 0;
@@ -60,23 +51,22 @@ public class CPU {
             d = Double.parseDouble(split[1]);
             p = (int)Double.parseDouble(split[2]);
             proc = new Process(i, b, d, p);
+            if(isMulti) proc.setLevel((int)Double.parseDouble(split[3]));
             i++;
             allProcs.add(proc);
         }
         initProcQueue(allProcs);
     }
     
-    private void initAllProc(int processNum) {
-        activeProc = null;
-        procQueue.clear();
-        allProcs.clear();
+    public static void randProc(int processNum, boolean isMulti, int levelNum) {
         Process p;
+        randomData.clear();
         for (int i = 0; i < processNum; i++) {
             p = new Process(i+1, 8.33, 2.1, 2.46, 0.7);
-            System.out.println(p.getBurstTime() + " " + p.getDelayTime() + " " + p.getPriority());
-            allProcs.add(p);
+            p.setLevel(new Random().nextInt(levelNum)+1);
+            randomData.add(p.getBurstTime() + " " + p.getDelayTime() 
+                    + " " + p.getPriority() + " " + p.getLevel());
         }
-        initProcQueue(allProcs);
     }
     
     private void initProcQueue(ArrayList<Process> allProcess) {
@@ -291,4 +281,9 @@ public class CPU {
     public void setCs(double cs) {
         if(cs > 0.4) this.cs = cs;
     }
+
+    public static ArrayList<String> getRandomData() {
+        return randomData;
+    }
+    
 }

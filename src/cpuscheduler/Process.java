@@ -46,7 +46,6 @@ public class Process {
         totalBurstTime = burstTime;
         delayTime = Double.valueOf(df.format(gen.nextGaussian() * stddevD + meanD));
         priority = (int) Math.round((Math.random() * 9));
-        System.out.println(totalBurstTime + " " + delayTime + " " + priority);
     }
     
     Process(int PID, double burstTime, double delayTime, int priority){

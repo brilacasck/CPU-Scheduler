@@ -12,39 +12,43 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="277.0" prefWidth="372.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cpuscheduler.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="458.0" prefWidth="531.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cpuscheduler.FXMLDocumentController">
    <children>
-      <HBox prefHeight="277.0" prefWidth="366.0" spacing="5.0">
+      <HBox prefHeight="458.0" prefWidth="531.0" spacing="10.0">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="264.0" prefWidth="226.0" spacing="5.0">
+            <VBox alignment="TOP_CENTER" prefHeight="453.0" prefWidth="371.0" spacing="5.0">
                <children>
                   <Label text="Processes">
                      <tooltip>
-                        <Tooltip text="(Burst Time, Delay Time, Priority) or for random input type &quot;Random #process&quot;" />
+                        <Tooltip text="(Burst Time, Delay Time, Priority, Level) or for random input type &quot;Random #process&quot;" />
                      </tooltip>
                   </Label>
-                  <TextArea fx:id="input" prefHeight="200.0" prefWidth="200.0" />
+                  <TextArea fx:id="input" prefHeight="258.0" prefWidth="336.0" />
                   <Label fx:id="status" prefWidth="226.0" text="Load From File or Write &quot;Random #processes&quot;">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
+                  <TextArea fx:id="levels" prefHeight="120.0" prefWidth="336.0" />
                </children>
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
+               <padding>
+                  <Insets bottom="10.0" />
+               </padding>
             </VBox>
-            <VBox alignment="TOP_CENTER" prefHeight="264.0" prefWidth="120.0" spacing="5.0">
+            <VBox alignment="TOP_CENTER" prefHeight="453.0" prefWidth="130.0" spacing="5.0">
                <children>
-                  <ChoiceBox fx:id="schMethod" onAction="#choiceBoxAction" prefWidth="150.0" />
-                  <ChoiceBox fx:id="levelMethod" prefWidth="150.0" />
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <ChoiceBox fx:id="schMethod" onAction="#choiceBoxAction" prefHeight="27.0" prefWidth="129.0" />
+                  <ChoiceBox fx:id="levelMethod" onAction="#choiceBoxAction" prefWidth="150.0" />
+                  <VBox prefHeight="37.0" prefWidth="130.0">
                      <children>
                         <Label text="Simulation Speed: " />
-                        <TextField fx:id="simSpeed" text="1" />
+                        <TextField fx:id="simSpeed" prefHeight="21.0" prefWidth="130.0" text="1" />
                      </children>
                   </VBox>
-                  <VBox prefHeight="70.0" prefWidth="120.0" spacing="2.0">
+                  <VBox prefHeight="38.0" prefWidth="130.0" spacing="2.0">
                      <children>
                         <Label text="CS: ">
                            <tooltip>
@@ -54,20 +58,23 @@
                         <TextField fx:id="cs" text="0.4" />
                      </children>
                   </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+                  <VBox prefHeight="45.0" prefWidth="120.0" spacing="2.0">
                      <children>
                         <Label text="Quantum: ">
                            <tooltip>
                               <Tooltip text="Quantum Duration for Round Robin (min is 0.2)" />
                            </tooltip>
                         </Label>
-                        <TextField fx:id="quantum" text="0.2" />
+                        <TextField fx:id="quantum" prefHeight="5.0" prefWidth="130.0" text="0.2" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                      <children>
                         <Button fx:id="run" mnemonicParsing="false" onAction="#handleRunButtonAction" text="Run" />
-                        <Button fx:id="reloadFile" mnemonicParsing="false" onAction="#handleReloadFileButtonAction" text="Reload File" />
+                        <Button fx:id="randomInput" mnemonicParsing="false" onAction="#handleRandomInputButtonAction" text="Random Input" />
+                        <Button fx:id="reloadFile" mnemonicParsing="false" onAction="#handleReloadFileButtonAction" text="Load File" />
+                        <Button fx:id="addLevel" mnemonicParsing="false" onAction="#handleAddLevelButtonAction" text="Add Level" />
+                        <Button fx:id="removeLevel" mnemonicParsing="false" onAction="#handleRemoveLevelButtonAction" text="Remove Level" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />
@@ -75,7 +82,7 @@
                   </VBox>
                </children>
                <padding>
-                  <Insets top="10.0" />
+                  <Insets top="20.0" />
                </padding>
             </VBox>
          </children>
