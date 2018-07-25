@@ -1,8 +1,8 @@
 # CPU-Scheduler
 > simulating scheduling algorithms of operating system for processes e.g. Priority Scheduling, Multi Level Scheduling, ...
 
-<img src="./assets/1_overall.png" width="250" align="middle">
-<img src="./assets/2_overall.png" width="250" align="middle">
+<img src="./assets/1_overall.png" width="500" align="middle">
+<img src="./assets/2_overall.png" width="500" align="middle">
 
 <hr />
 
@@ -78,6 +78,17 @@ The hierarchy display of the classes is demonstrated here:
 
 ## Results
 
+    - For Example we are Scheduling process in Multi Level non-preemptive(l1:FCFS, l2 FCFS) below (input.txt file)
+<img src="./assets/Multilevel.jpg" width="500" align="middle">
+
+    - First we enter process information and choose scheduling alghorithm then press Run button
+<img src="./assets/3_example.jpg" width="500" align="middle">
+
+    - Wait for simulation to end
+<img src="./assets/4_duringex.png" width="500" align="middle">
+
+    - Now you can see the results
+<img src="./assets/5_reportex.png" width="500" align="middle">
 
 
 <hr />
