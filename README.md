@@ -1,8 +1,8 @@
 # CPU-Scheduler
 > simulating scheduling algorithms of operating system for processes e.g. Priority Scheduling, Multi Level Scheduling, ...
 
-![Overall1](./assets/1_overall.png =250x250)
-![Overall2](./assets/2_overall.png =250x250)
+![Overall1](./assets/1_overall.png | width=100)
+![Overall2](./assets/2_overall.png | width=100)
 
 <hr />
 
