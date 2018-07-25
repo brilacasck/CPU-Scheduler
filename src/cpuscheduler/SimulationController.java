@@ -6,7 +6,9 @@
 package cpuscheduler;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +62,15 @@ public class SimulationController implements Initializable {
     @FXML
     private void handleBackButtonAction(ActionEvent event) {
         
+        at.stop();
+        procBars.clear();
+        procBarsTable.clear();
+        labels.clear();
+        lvls.clear();
+        FXMLDocumentController.getCpu().resetSimData();
+        FXMLDocumentController.getCpu().resetReport();
+        FXMLDocumentController.getCpu().resetAll();
+        
         try {
             Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
             Scene scene = new Scene(root);
@@ -79,6 +90,8 @@ public class SimulationController implements Initializable {
         root.setAlignment(Pos.CENTER);
         scroll.setContent(root);
         Scanner scanner = new Scanner(FXMLDocumentController.getCpu().getSimData());
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.FLOOR);
         
         at = new AnimationTimer() {
             @Override
@@ -99,9 +112,9 @@ public class SimulationController implements Initializable {
                             strtmp += "StrtTime:" + String.format("%.1f", Double.valueOf(splt[5])) + " ";
                             strtmp += "FishTime:" + String.format("%.1f", Double.valueOf(splt[6]));
                             procBars.get(procBarsTable.get(Integer.valueOf(splt[0])))
-                                    .setProgress( (Double.valueOf(splt[2]) - Double.valueOf(splt[1]))
-                                            / Double.valueOf(splt[2]));
-                            
+                                    .setProgress( (Double.valueOf(df.format(Double.valueOf(splt[2]))) 
+                                            - (Double.valueOf(df.format(Double.valueOf(splt[1])))) )
+                                            / Double.valueOf(df.format(Double.valueOf(splt[2]))) );
                             labels.get(procBarsTable.get(Integer.valueOf(splt[0])))
                                     .setText(strtmp);
                             strtmp = "";
@@ -125,7 +138,7 @@ public class SimulationController implements Initializable {
                             subroot1.getChildren().add(labels.get(procBars.size()-1));
                             strtmp = "";
                             subroot1.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,
-                                                             null,new BorderWidths(1))));
+                                    null,new BorderWidths(1))));
                             subroot1.setAlignment(Pos.CENTER);
                             root.getChildren().add(subroot1);
                         }

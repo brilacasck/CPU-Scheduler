@@ -77,7 +77,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TextField quantum;
     
-    private ArrayList<String> schLevels;
+    private static ArrayList<String> schLevels = new ArrayList<>();
+    
+    private static String prevInput = "";
     
     private static CPU cpu;
     
@@ -101,6 +103,7 @@ public class FXMLDocumentController implements Initializable {
                 }else{
                     cpu = new CPU(input.getText(), method, true);
                 }
+                prevInput = input.getText();
                 cpu.Simulate();
                 speed = Double.parseDouble(simSpeed.getText());
                 try {
@@ -169,7 +172,8 @@ public class FXMLDocumentController implements Initializable {
         File file = fileChooser.showOpenDialog(primaryStage);
         if(file != null){
             String s = "", res = "";
-            double b = 0, d = 0, p = 0;
+            double b = 0, d = 0;
+            int p = 0, l = 0;
             try {
                 BufferedReader input = new BufferedReader(new FileReader(file));
                 while ((s = input.readLine()) != null) {
@@ -177,7 +181,8 @@ public class FXMLDocumentController implements Initializable {
                     b = Double.parseDouble(split[0]);
                     d = Double.parseDouble(split[1]);
                     p = Integer.parseInt(split[2]);
-                    res += b + " " + d + " " + p + "\n";
+                    l = Integer.parseInt(split[3]);
+                    res += b + " " + d + " " + p + " " + l + "\n";
                 }
                 this.input.setText(res);
             } catch (Exception e) {
@@ -313,7 +318,14 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        schLevels = new ArrayList<>();
+        input.setText(prevInput);
+        String res = "";
+        int i = 1;
+        for (String schLevel : schLevels) {
+            res += "Level " + i + " : " + schLevel + "\n";
+            i++;
+        }
+        levels.setText(res);
         
         simSpeed.addEventFilter(KeyEvent.KEY_TYPED, numericValidation(2));
         cs.addEventFilter(KeyEvent.KEY_TYPED, numericValidation(5));
@@ -347,4 +359,6 @@ public class FXMLDocumentController implements Initializable {
     public static double getSpeed(){
         return speed;
     }
+    
+    
 }

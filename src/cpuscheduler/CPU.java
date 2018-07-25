@@ -282,6 +282,11 @@ public class CPU {
         if(cs > 0.4) this.cs = cs;
     }
 
+    public ArrayList<Process> getAllProcs() {
+        return allProcs;
+    }
+    
+
     public static ArrayList<String> getRandomData() {
         return randomData;
     }
