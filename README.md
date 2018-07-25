@@ -82,16 +82,28 @@ The hierarchy display of the classes is demonstrated here:
 
 ## Results
 
+**Input Tabel: **
+
+| Process Name  | Arrival Time  | Execute Time  | Level         |
+| ------------- | ------------- | ------------- | ------------- |
+| 1             | 0             | 5             | 1             |
+| 2             | 1             | 8             | 2             |
+
+
 **For Example we are Scheduling process in Multi Level non-preemptive(l1:FCFS, l2 FCFS) below (input.txt file)**
+
 <img src="./assets/Multilevel.jpg" width="500" align="middle">
 
 **First we enter process information and choose scheduling alghorithm then press Run button**
+
 <img src="./assets/3_example.png" width="500" align="middle">
 
 **Wait for simulation to end**
+
 <img src="./assets/4_duringex.png" width="500" align="middle">
 
 **Now you can see the results**
+
 <img src="./assets/5_reportex.png" width="500" align="middle">
 
 
