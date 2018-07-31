@@ -135,8 +135,8 @@ Input Tabel:
 
 ## Authors
 
-  - Alireza Kavian ( [@alirezakay](https://github.com/alirezakay) )
   - Soheil Changizi ( [@cocolico14](https://github.com/cocolico14) )
+  - Alireza Kavian ( [@alirezakay](https://github.com/alirezakay) )
   
 ## Org.
 
